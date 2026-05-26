@@ -1,0 +1,285 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { agents } from '../../data/agents';
+---
+<Layout title="Admin · Demoer — BYGG-KON.ai" description="Last opp og administrer demo-filmer.">
+
+  <section class="pt-40 pb-12 lg:pt-48 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="orb orb-2"></div>
+    </div>
+
+    <div class="wrap max-w-[920px]">
+      <a href="/demoer" class="inline-flex items-center gap-1.5 text-sm text-ink-4 hover:text-ink mb-8 transition-colors">
+        ← Til offentlig side
+      </a>
+
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-ki"></span>
+        Admin
+      </div>
+      <h1 class="h1 mb-4">Demo-filmer</h1>
+      <p class="lede max-w-[640px]">
+        Last opp screen-recordings og forklarende videoer. Lagres på Railway-volume
+        og vises på <code class="text-sm bg-cream px-2 py-0.5 rounded">/demoer</code>.
+      </p>
+    </div>
+  </section>
+
+  <!-- API key prompt overlay -->
+  <div id="keyOverlay" class="fixed inset-0 bg-ink/90 backdrop-blur-sm z-50 flex items-center justify-center p-6 hidden">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full">
+      <h3 class="text-xl font-extrabold mb-3">Logg inn som admin</h3>
+      <p class="text-sm text-ink-3 mb-5">Skriv inn ADMIN_API_KEY for å laste opp og slette filmer.</p>
+      <input id="keyInput" type="password" placeholder="ADMIN_API_KEY"
+             class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 mb-4 font-mono text-sm" />
+      <button id="keySubmit" class="btn btn-primary w-full justify-center">Bekreft</button>
+      <div id="keyError" class="text-sm text-red-600 mt-3 hidden"></div>
+    </div>
+  </div>
+
+  <!-- Upload form -->
+  <section class="py-8 lg:py-12">
+    <div class="wrap max-w-[920px]">
+      <form id="uploadForm" class="card p-8 lg:p-10 space-y-6">
+        <h2 class="text-2xl font-extrabold tracking-tight">Last opp ny demo</h2>
+
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-2">
+            Tittel <span class="text-ki">*</span>
+          </label>
+          <input id="vTitle" name="title" required minlength="2"
+                 class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 text-base" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-2">Beskrivelse</label>
+          <textarea id="vDescription" name="description" rows="3"
+                    class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 text-base resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-3">Knyttet til agenter</label>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {agents.map(a => (
+              <label class="flex items-center gap-2 p-3 rounded-xl border border-line bg-cream/40 hover:bg-white cursor-pointer transition-all has-[:checked]:bg-white has-[:checked]:border-ink/30">
+                <input type="checkbox" name="agent_tags" value={a.slug}
+                       class="w-4 h-4 rounded border-ink-5 text-ink focus:ring-2 focus:ring-ink/20" />
+                <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${a.color}`}></span>
+                <span class="text-sm font-medium">{a.name}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-2">
+            Video-fil <span class="text-ki">*</span>
+          </label>
+          <input id="vFile" name="file" type="file" accept="video/mp4,video/webm,video/quicktime,video/x-matroska,video/ogg" required
+                 class="w-full text-sm text-ink-3 file:mr-4 file:px-4 file:py-2.5 file:rounded-full file:border-0 file:bg-ink file:text-white file:font-semibold file:cursor-pointer file:hover:bg-ink-2" />
+          <p class="text-xs text-ink-4 mt-2">Maks 200 MB · MP4, WebM, MOV, MKV, OGV</p>
+        </div>
+
+        <div class="flex items-center justify-between gap-4 pt-2">
+          <p class="text-xs text-ink-4">Last opp kan ta litt tid for store filer.</p>
+          <button type="submit" id="uploadBtn" class="btn btn-primary">
+            <span class="btn-label">Last opp</span>
+          </button>
+        </div>
+
+        <div id="uploadStatus" class="hidden"></div>
+        <div id="uploadProgress" class="hidden">
+          <div class="w-full h-2 bg-cream rounded-full overflow-hidden">
+            <div id="uploadBar" class="h-full bg-ki transition-all" style="width:0%"></div>
+          </div>
+          <div id="uploadPct" class="text-xs text-ink-4 mt-2 font-mono">0%</div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Existing videos -->
+  <section class="py-12 lg:py-16">
+    <div class="wrap max-w-[920px]">
+      <h2 class="text-2xl font-extrabold tracking-tight mb-6">Eksisterende demoer</h2>
+      <div id="videoList" class="space-y-3">
+        <div class="text-sm text-ink-4">Laster...</div>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  const overlay = document.getElementById('keyOverlay') as HTMLDivElement;
+  const keyInput = document.getElementById('keyInput') as HTMLInputElement;
+  const keySubmit = document.getElementById('keySubmit') as HTMLButtonElement;
+  const keyError = document.getElementById('keyError') as HTMLDivElement;
+  const form = document.getElementById('uploadForm') as HTMLFormElement;
+  const uploadBtn = document.getElementById('uploadBtn') as HTMLButtonElement;
+  const btnLabel = uploadBtn.querySelector('.btn-label') as HTMLElement;
+  const uploadStatus = document.getElementById('uploadStatus') as HTMLDivElement;
+  const uploadProgress = document.getElementById('uploadProgress') as HTMLDivElement;
+  const uploadBar = document.getElementById('uploadBar') as HTMLDivElement;
+  const uploadPct = document.getElementById('uploadPct') as HTMLDivElement;
+  const videoList = document.getElementById('videoList') as HTMLDivElement;
+
+  let apiKey = sessionStorage.getItem('admin_api_key') || '';
+
+  function showKeyOverlay() { overlay.classList.remove('hidden'); keyInput.focus(); }
+  function hideKeyOverlay() { overlay.classList.add('hidden'); }
+
+  async function verifyKey(): Promise<boolean> {
+    if (!apiKey) return false;
+    try {
+      const res = await fetch('/api/videos?all=1', {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      return res.ok;
+    } catch { return false; }
+  }
+
+  async function loadVideos() {
+    if (!apiKey) return;
+    try {
+      const res = await fetch('/api/videos?all=1', {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      if (!res.ok) {
+        videoList.innerHTML = '<div class="text-sm text-red-600">Kunne ikke laste videoer.</div>';
+        return;
+      }
+      const json = await res.json();
+      const videos = json.videos || [];
+      if (videos.length === 0) {
+        videoList.innerHTML = '<div class="text-sm text-ink-4 italic">Ingen demoer lastet opp ennå.</div>';
+        return;
+      }
+      videoList.innerHTML = videos.map((v: any) => `
+        <div class="card p-5 flex items-center justify-between gap-4">
+          <div class="min-w-0 flex-1">
+            <div class="font-bold text-ink truncate">${escapeHtml(v.title)}</div>
+            <div class="text-xs text-ink-4 mt-1 font-mono">
+              ${escapeHtml(v.uploaded_at)} · ${(v.size_bytes / 1024 / 1024).toFixed(1)} MB · ${escapeHtml(v.mime_type)}
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="${escapeHtml(v.file_url)}" target="_blank" class="text-sm text-ink-3 hover:text-ink">Vis ↗</a>
+            <button data-id="${v.id}" class="del-btn text-sm text-red-600 hover:text-red-700 font-semibold">Slett</button>
+          </div>
+        </div>
+      `).join('');
+      videoList.querySelectorAll('.del-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = (btn as HTMLElement).dataset.id;
+          if (!id) return;
+          if (!confirm('Sikker på at du vil slette denne videoen?')) return;
+          const res = await fetch(`/api/videos/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${apiKey}` }
+          });
+          if (res.ok) loadVideos();
+          else alert('Kunne ikke slette.');
+        });
+      });
+    } catch (err) {
+      videoList.innerHTML = '<div class="text-sm text-red-600">Feil ved lasting.</div>';
+    }
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
+  }
+
+  // Initial: verify key, else prompt
+  (async () => {
+    if (await verifyKey()) {
+      loadVideos();
+    } else {
+      apiKey = '';
+      sessionStorage.removeItem('admin_api_key');
+      showKeyOverlay();
+    }
+  })();
+
+  keySubmit.addEventListener('click', async () => {
+    apiKey = keyInput.value.trim();
+    if (!apiKey) return;
+    if (await verifyKey()) {
+      sessionStorage.setItem('admin_api_key', apiKey);
+      hideKeyOverlay();
+      loadVideos();
+    } else {
+      keyError.textContent = 'Feil nøkkel.';
+      keyError.classList.remove('hidden');
+    }
+  });
+  keyInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') keySubmit.click();
+  });
+
+  // Upload form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!apiKey) { showKeyOverlay(); return; }
+
+    uploadStatus.classList.add('hidden');
+    uploadStatus.textContent = '';
+    uploadProgress.classList.remove('hidden');
+    uploadBar.style.width = '0%';
+    uploadPct.textContent = '0%';
+    uploadBtn.disabled = true;
+    btnLabel.textContent = 'Laster opp...';
+
+    const fd = new FormData(form);
+
+    // Use XHR for progress (fetch doesn't expose upload progress)
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/videos');
+    xhr.setRequestHeader('Authorization', `Bearer ${apiKey}`);
+
+    xhr.upload.addEventListener('progress', (ev) => {
+      if (ev.lengthComputable) {
+        const pct = Math.round((ev.loaded / ev.total) * 100);
+        uploadBar.style.width = pct + '%';
+        uploadPct.textContent = pct + '%';
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      uploadProgress.classList.add('hidden');
+      uploadBtn.disabled = false;
+      btnLabel.textContent = 'Last opp';
+      try {
+        const json = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300 && json.ok) {
+          uploadStatus.className = 'p-4 rounded-xl bg-ki/10 border border-ki/30 text-ink';
+          uploadStatus.textContent = '✓ Lastet opp.';
+          uploadStatus.classList.remove('hidden');
+          form.reset();
+          loadVideos();
+        } else {
+          uploadStatus.className = 'p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm';
+          uploadStatus.textContent = json.error || 'Feil ved opplasting.';
+          uploadStatus.classList.remove('hidden');
+        }
+      } catch {
+        uploadStatus.className = 'p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm';
+        uploadStatus.textContent = 'Uventet respons fra server.';
+        uploadStatus.classList.remove('hidden');
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      uploadProgress.classList.add('hidden');
+      uploadBtn.disabled = false;
+      btnLabel.textContent = 'Last opp';
+      uploadStatus.className = 'p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm';
+      uploadStatus.textContent = 'Nettverksfeil ved opplasting.';
+      uploadStatus.classList.remove('hidden');
+    });
+
+    xhr.send(fd);
+  });
+</script>

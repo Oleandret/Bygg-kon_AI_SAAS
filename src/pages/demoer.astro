@@ -1,0 +1,122 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { listPublishedVideos } from '../lib/db';
+import { agents } from '../data/agents';
+
+const videos = listPublishedVideos();
+const agentBySlug = new Map(agents.map(a => [a.slug, a]));
+
+function formatSize(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+function formatDate(iso: string): string {
+  const d = new Date(iso.replace(' ', 'T') + 'Z');
+  return d.toLocaleDateString('no-NO', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+---
+<Layout title="Demo-filmer — BYGG-KON.ai" description="Se hvordan BYGG-KON.ai brukes i praksis. Korte screen-recordings.">
+
+  <section class="pt-40 pb-16 lg:pt-48 lg:pb-20 relative overflow-hidden">
+
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="orb orb-1"></div>
+    </div>
+    <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
+
+    <div class="wrap max-w-[1100px]">
+      <a href="/" class="inline-flex items-center gap-1.5 text-sm text-ink-4 hover:text-ink mb-8 transition-colors">
+        ← Tilbake
+      </a>
+
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-ki"></span>
+        Demo-filmer
+      </div>
+
+      <h1 class="h1 mb-6">
+        Se plattformen
+        <span class="h-display block">i bruk.</span>
+      </h1>
+      <p class="lede max-w-[640px] text-xl">
+        Korte screen-recordings som viser hvordan ansatte bruker BYGG-KON.ai
+        til å løse faktiske oppgaver i hverdagen.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12 lg:py-16">
+    <div class="wrap max-w-[1100px]">
+
+      {videos.length === 0 ? (
+        <div class="card p-12 lg:p-16 text-center">
+          <div class="text-5xl mb-4 opacity-30">🎬</div>
+          <h3 class="text-xl font-bold text-ink mb-2">Ingen demoer enda</h3>
+          <p class="text-ink-3">
+            Det er ikke lastet opp noen demo-filmer ennå. Kom tilbake snart.
+          </p>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          {videos.map(v => {
+            const tags = (JSON.parse(v.agent_tags) as string[])
+              .map(slug => agentBySlug.get(slug))
+              .filter(Boolean);
+            return (
+              <article class="card p-6 lg:p-7">
+                <!-- Video player -->
+                <div class="rounded-xl overflow-hidden bg-ink mb-5 aspect-video">
+                  <video
+                    controls
+                    preload="metadata"
+                    class="w-full h-full"
+                    playsinline
+                  >
+                    <source src={`/api/videos/${v.id}/file`} type={v.mime_type} />
+                    Din nettleser støtter ikke video-avspilling.
+                  </video>
+                </div>
+
+                <!-- Meta -->
+                <div class="flex items-center gap-3 flex-wrap mb-3">
+                  {tags.map(a => a && (
+                    <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full"
+                          style={`background:${a.color}15; color:${a.color};`}>
+                      <span class="w-1.5 h-1.5 rounded-full" style={`background:${a.color}`}></span>
+                      {a.name}
+                    </span>
+                  ))}
+                  <span class="text-xs text-ink-4 ml-auto font-mono">
+                    {formatDate(v.uploaded_at)}
+                  </span>
+                </div>
+
+                <h3 class="text-xl font-extrabold text-ink leading-tight mb-2 tracking-tight">
+                  {v.title}
+                </h3>
+                {v.description && (
+                  <p class="text-[14.5px] text-ink-3 leading-[1.65] mb-3">
+                    {v.description}
+                  </p>
+                )}
+                <div class="text-xs text-ink-4 font-mono">
+                  {formatSize(v.size_bytes)}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+
+      <div class="mt-16 text-center">
+        <a href="/bestill" class="btn btn-primary">
+          Bestill din egen demo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>

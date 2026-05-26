@@ -25,7 +25,8 @@ npm start            # http://localhost:3000
 |---|---|---|
 | `PORT` | nei | Port (default 3000) |
 | `DB_PATH` | nei | SQLite-sti (default `./data/orders.sqlite`). På Railway: pek til volume, f.eks. `/app/data/orders.sqlite` |
-| `ADMIN_API_KEY` | **ja, for GET /api/orders** | Hemmelig nøkkel for å hente ut bestillinger. Lang random streng. |
+| `VIDEOS_DIR` | nei | Mappe for video-filer (default: samme volume som DB, `/videos`-undermappe) |
+| `ADMIN_API_KEY` | **ja, for admin** | Hemmelig nøkkel for opplasting av demoer, henting av bestillinger osv. Generer med `openssl rand -hex 32`. |
 
 ## Deploy til Railway
 
@@ -126,7 +127,31 @@ For å hente bestillinger manuelt på Railway: `railway run sqlite3 /app/data/or
 - `/` — landing (hero, agenter, pipelines, leveranser, stack, CTA)
 - `/agent/[slug]` — agent-detalj
 - `/bestill` — bestillingsskjema
-- `/api/orders` — API-endepunkt (POST/GET)
+- `/demoer` — offentlig demo-galleri (videoer)
+- `/admin/demoer` — admin-side for opplasting (krever ADMIN_API_KEY)
+- `/historie` — om visjonen
+- `/api/orders` — POST/GET bestillinger
+- `/api/videos` — POST (admin) opplasting · GET listing
+- `/api/videos/[id]` — DELETE (admin)
+- `/api/videos/[id]/file` — GET stream (med Range-support)
+
+## Demoer / video-opplasting
+
+- Admin: gå til `/admin/demoer`, lim inn `ADMIN_API_KEY`, last opp.
+- Maks 200 MB per fil. Formater: MP4, WebM, MOV, MKV, OGV.
+- Filer lagres på Railway-volumet under `<DB_PATH>/../videos/` (eller egendefinert `VIDEOS_DIR`).
+- Metadata lagres i SQLite-tabellen `videos`.
+- Videoavspilling støtter HTTP Range (du kan spole i en stor fil).
+
+For å laste opp via cURL:
+```bash
+curl -X POST https://din-app.up.railway.app/api/videos \
+  -H "Authorization: Bearer DIN_ADMIN_API_KEY" \
+  -F "title=Demo av Loki" \
+  -F "description=Hvordan finne en gammel rapport" \
+  -F "agent_tags=loki" \
+  -F "file=@demo.mp4"
+```
 
 ## Struktur
 
