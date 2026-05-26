@@ -14,7 +14,15 @@ export type Agent = {
   pipeline: { i: string; n: string; d: string }[];
   details: { k: string; v: string }[];
   url?: string;
+  orderable?: boolean;  // Vis i bestillingsskjema
 };
+
+// Slugs som kan bestilles i skjema — endre her for å åpne flere
+export const ORDERABLE_SLUGS = ['loki', 'nova', 'hilde'] as const;
+
+export function getOrderableAgents() {
+  return agents.filter(a => (ORDERABLE_SLUGS as readonly string[]).includes(a.slug));
+}
 
 export const agents: Agent[] = [
   {

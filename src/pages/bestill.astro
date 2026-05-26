@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { agents } from '../data/agents';
+import { getOrderableAgents } from '../data/agents';
+
+const orderableAgents = getOrderableAgents();
 ---
 <Layout title="Bestill demo — BYGG-KON.ai" description="Bestill demo av BYGG-KON.ai. Velg agentene du ønsker tilbud på.">
 
@@ -21,7 +23,7 @@ import { agents } from '../data/agents';
 
       <div class="mb-12">
         <div class="eyebrow mb-5">
-          <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-ki"></span>
           Bestill demo
         </div>
         <h1 class="h1 mb-6">
@@ -43,7 +45,7 @@ import { agents } from '../data/agents';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label for="name" class="block text-sm font-semibold text-ink mb-2">
-              Navn <span class="text-loki">*</span>
+              Navn <span class="text-ki">*</span>
             </label>
             <input id="name" name="name" type="text" required minlength="2" autocomplete="name"
                    class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base" />
@@ -60,7 +62,7 @@ import { agents } from '../data/agents';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label for="email" class="block text-sm font-semibold text-ink mb-2">
-              E-post <span class="text-loki">*</span>
+              E-post <span class="text-ki">*</span>
             </label>
             <input id="email" name="email" type="email" required autocomplete="email"
                    class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base" />
@@ -87,12 +89,12 @@ import { agents } from '../data/agents';
         <div>
           <div class="flex items-baseline justify-between mb-4">
             <label class="block text-sm font-semibold text-ink">
-              Hvilke agenter ønsker du tilbud på? <span class="text-loki">*</span>
+              Hvilke agenter ønsker du tilbud på? <span class="text-ki">*</span>
             </label>
             <span class="text-xs text-ink-4">Velg en eller flere</span>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            {agents.map(agent => (
+            {orderableAgents.map(agent => (
               <label class="group flex items-start gap-3 p-4 rounded-xl border border-line bg-cream/40 hover:bg-white hover:border-ink/20 cursor-pointer transition-all has-[:checked]:bg-white has-[:checked]:border-ink/30">
                 <input type="checkbox" name="agents" value={agent.slug}
                        class="mt-0.5 w-4 h-4 rounded border-ink-5 text-ink focus:ring-2 focus:ring-ink/20 cursor-pointer" />
@@ -106,6 +108,9 @@ import { agents } from '../data/agents';
               </label>
             ))}
           </div>
+          <p class="text-xs text-ink-4 mt-3 italic">
+            Flere agenter tilbys etter hvert som de blir klare for kunder.
+          </p>
         </div>
 
         <!-- Submit + status -->
@@ -170,13 +175,13 @@ import { agents } from '../data/agents';
           form.reset();
           btnLabel.textContent = 'Sendt ✓';
         } else {
-          status.className = 'p-4 rounded-xl bg-loki/10 border border-loki/30 text-ink text-sm';
+          status.className = 'p-4 rounded-xl bg-ki/10 border border-ki/30 text-ink text-sm';
           status.textContent = json.error || 'Noe gikk galt. Prøv igjen senere.';
           submitBtn.disabled = false;
           btnLabel.textContent = 'Send forespørsel';
         }
       } catch (err) {
-        status.className = 'p-4 rounded-xl bg-loki/10 border border-loki/30 text-ink text-sm';
+        status.className = 'p-4 rounded-xl bg-ki/10 border border-ki/30 text-ink text-sm';
         status.textContent = 'Nettverksfeil. Sjekk forbindelsen og prøv igjen.';
         submitBtn.disabled = false;
         btnLabel.textContent = 'Send forespørsel';

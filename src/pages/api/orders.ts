@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
 import { createOrder, listOrders, countOrders } from '../../lib/db';
-import { agents as ALL_AGENTS } from '../../data/agents';
+import { ORDERABLE_SLUGS } from '../../data/agents';
 
-const VALID_SLUGS = new Set(ALL_AGENTS.map(a => a.slug));
+// Bare orderable agents kan bestilles via skjema
+const VALID_SLUGS = new Set<string>(ORDERABLE_SLUGS);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function getClientIp(req: Request): string | null {
@@ -46,7 +47,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
   const invalidAgents = agents.filter((s: string) => !VALID_SLUGS.has(s));
   if (invalidAgents.length > 0) {
-    return new Response(JSON.stringify({ ok: false, error: `Ukjente agenter: ${invalidAgents.join(', ')}` }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ ok: false, error: `Agenter som ikke er tilgjengelige for bestilling: ${invalidAgents.join(', ')}` }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
   // Honeypot field — bots that fill this get silently dropped

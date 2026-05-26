@@ -75,7 +75,7 @@
 
   /* Gradient text — premium */
   .grad-text {
-    background: linear-gradient(135deg, #0a0d12 0%, #3a4150 40%, #c8102e 100%);
+    background: linear-gradient(135deg, #0a0d12 0%, #3a4150 40%, #1f8a3a 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -174,9 +174,9 @@ section[id] { scroll-margin-top: 80px; }
 }
 .orb-2 {
   width: 460px; height: 460px;
-  background: #c8102e;
+  background: #1f8a3a;
   top: 100px; right: -120px;
-  opacity: 0.30;
+  opacity: 0.28;
   animation: drift-2 28s ease-in-out infinite;
 }
 .orb-3 {
