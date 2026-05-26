@@ -1,0 +1,124 @@
+---
+import { agents } from '../data/agents';
+---
+<section id="pipelines" class="py-28 lg:py-36 relative overflow-hidden">
+
+  <!-- Background ambient -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="orb" style="width:500px; height:500px; background:#c8102e; top:-100px; left:30%; opacity:0.10; filter:blur(120px); animation: drift-2 30s ease-in-out infinite;"></div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="max-w-[760px] mb-16 lg:mb-20 reveal">
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+        Pipelines
+      </div>
+      <h2 class="h2 mb-6">
+        Hva som faktisk skjer,
+        <span class="h-display block">under panseret.</span>
+      </h2>
+      <p class="lede max-w-[640px]">
+        Hver agent har sin egen pipeline &mdash; en kjede av spesialiserte steg
+        som forbereder kunnskapen før den når Claude. Her er hvordan det ser
+        ut for hver av de seks agentene.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
+      {agents.map((agent, idx) => (
+        <article class="card p-7 lg:p-9 reveal overflow-hidden relative" style={`--c:${agent.color};`}>
+
+          <!-- Header -->
+          <div class="flex items-start justify-between mb-7 gap-4">
+            <div>
+              <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-2" style={`color:${agent.color}`}>
+                {agent.num} · Pipeline
+              </div>
+              <h3 class="text-2xl font-extrabold text-ink leading-tight tracking-tight">{agent.name}</h3>
+              <div class="text-sm text-ink-4 mt-1">{agent.role}</div>
+            </div>
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full whitespace-nowrap"
+                  style={`background:${agent.color}15; color:${agent.color};`}>
+              <span class="w-1.5 h-1.5 rounded-full" style={`background:${agent.color}`}></span>
+              {agent.pipeline.length} steg
+            </span>
+          </div>
+
+          <!-- Horizontal pipeline visualization -->
+          <div class="bg-cream/60 rounded-2xl p-5 lg:p-6 mb-4 border border-line/60">
+            <svg viewBox={`0 0 ${agent.pipeline.length * 130 + 80} 140`} class="w-full h-auto pip-svg" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <path id={`pip-path-${agent.slug}`} d={`M 50 70 L ${agent.pipeline.length * 130 + 30} 70`} fill="none"/>
+              </defs>
+
+              <!-- Base rail -->
+              <line x1="50" y1="70" x2={agent.pipeline.length * 130 + 30} y2="70" stroke="#0a0d12" stroke-opacity="0.06" stroke-width="2"/>
+
+              <!-- Dashed flow line -->
+              <line x1="50" y1="70" x2={agent.pipeline.length * 130 + 30} y2="70"
+                    stroke={agent.color} stroke-opacity="0.45" stroke-width="2"
+                    stroke-dasharray="3 9" stroke-linecap="round"
+                    class="pip-flow" style={`animation-delay: ${-idx * 0.35}s;`}/>
+
+              <!-- Step nodes -->
+              {agent.pipeline.map((step, i) => {
+                const x = 50 + (i * (agent.pipeline.length * 130) / (agent.pipeline.length - 1 || 1));
+                return (
+                  <g>
+                    <!-- Node circle -->
+                    <circle cx={x} cy={70} r="20" fill="#ffffff" stroke={agent.color} stroke-width="1.5"/>
+                    <text x={x} y="75" text-anchor="middle" font-size="16">{step.i}</text>
+                    <!-- Step number -->
+                    <text x={x} y="38" text-anchor="middle" font-family="JetBrains Mono" font-size="9" font-weight="700" fill="#9aa3b2" letter-spacing="1">
+                      {String(i + 1).padStart(2, '0')}
+                    </text>
+                    <!-- Step name -->
+                    <text x={x} y="105" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#0a0d12">
+                      {step.n}
+                    </text>
+                    <!-- Step description -->
+                    <text x={x} y="120" text-anchor="middle" font-family="Inter" font-size="9" fill="#6b7280">
+                      {step.d.length > 24 ? step.d.slice(0, 22) + '…' : step.d}
+                    </text>
+                  </g>
+                );
+              })}
+
+              <!-- Traveling particle -->
+              <circle r="5" fill={agent.color} style={`filter: drop-shadow(0 0 4px ${agent.color});`}>
+                <animateMotion dur="4s" repeatCount="indefinite" begin={`${-idx * 0.4}s`}>
+                  <mpath href={`#pip-path-${agent.slug}`}/>
+                </animateMotion>
+                <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite" begin={`${-idx * 0.4}s`}/>
+              </circle>
+
+              <!-- Final arrow → Claude -->
+              <g transform={`translate(${agent.pipeline.length * 130 + 30}, 70)`}>
+                <path d="M 0 -8 L 12 0 L 0 8 Z" fill={agent.color} opacity="0.5"/>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Caption -->
+          <div class="flex items-center justify-between gap-3 text-xs">
+            <span class="font-mono text-ink-4">{agent.meta}</span>
+            <a href={`/agent/${agent.slug}`} class="font-semibold inline-flex items-center gap-1 transition-transform hover:translate-x-0.5" style={`color:${agent.color}`}>
+              Detaljer →
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pip-flow { animation: pip-dash 1.8s linear infinite; }
+  @keyframes pip-dash { to { stroke-dashoffset: -24; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pip-svg * { animation: none !important; }
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { agents } from '../data/agents';
+---
+<Layout title="Bestill demo — BYGG-KON.ai" description="Bestill demo av BYGG-KON.ai. Velg agentene du ønsker tilbud på.">
+
+  <section class="pt-40 pb-24 lg:pt-48 lg:pb-32 relative overflow-hidden">
+
+    <!-- Background -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
+
+    <div class="wrap max-w-[860px]">
+
+      <a href="/" class="inline-flex items-center gap-1.5 text-sm text-ink-4 hover:text-ink mb-8 transition-colors">
+        ← Tilbake
+      </a>
+
+      <div class="mb-12">
+        <div class="eyebrow mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+          Bestill demo
+        </div>
+        <h1 class="h1 mb-6">
+          Få et uforpliktende tilbud
+          <span class="h-display block">på agentene du trenger.</span>
+        </h1>
+        <p class="lede max-w-[640px]">
+          Fyll inn skjemaet under, så tar vi kontakt for å avtale demo og
+          gi tilbud på de agentene du ønsker å sette opp.
+        </p>
+      </div>
+
+      <!-- FORM -->
+      <form id="orderForm" class="card p-8 lg:p-10 space-y-6 reveal in" novalidate>
+
+        <!-- Honeypot (hidden) -->
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label for="name" class="block text-sm font-semibold text-ink mb-2">
+              Navn <span class="text-loki">*</span>
+            </label>
+            <input id="name" name="name" type="text" required minlength="2" autocomplete="name"
+                   class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base" />
+          </div>
+          <div>
+            <label for="company" class="block text-sm font-semibold text-ink mb-2">
+              Bedrift
+            </label>
+            <input id="company" name="company" type="text" autocomplete="organization"
+                   class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label for="email" class="block text-sm font-semibold text-ink mb-2">
+              E-post <span class="text-loki">*</span>
+            </label>
+            <input id="email" name="email" type="email" required autocomplete="email"
+                   class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base" />
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-semibold text-ink mb-2">
+              Telefon
+            </label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel"
+                   class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base" />
+          </div>
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-semibold text-ink mb-2">
+            Melding
+          </label>
+          <textarea id="message" name="message" rows="4"
+                    placeholder="Kort om prosjektet eller behovet ditt..."
+                    class="w-full px-4 py-3 rounded-xl border border-line bg-white focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5 transition-all text-base resize-none"></textarea>
+        </div>
+
+        <!-- Agent checkboxes -->
+        <div>
+          <div class="flex items-baseline justify-between mb-4">
+            <label class="block text-sm font-semibold text-ink">
+              Hvilke agenter ønsker du tilbud på? <span class="text-loki">*</span>
+            </label>
+            <span class="text-xs text-ink-4">Velg en eller flere</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            {agents.map(agent => (
+              <label class="group flex items-start gap-3 p-4 rounded-xl border border-line bg-cream/40 hover:bg-white hover:border-ink/20 cursor-pointer transition-all has-[:checked]:bg-white has-[:checked]:border-ink/30">
+                <input type="checkbox" name="agents" value={agent.slug}
+                       class="mt-0.5 w-4 h-4 rounded border-ink-5 text-ink focus:ring-2 focus:ring-ink/20 cursor-pointer" />
+                <span class="flex-1 min-w-0">
+                  <span class="flex items-center gap-2 mb-0.5">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${agent.color}`}></span>
+                    <span class="font-semibold text-ink">{agent.name}</span>
+                  </span>
+                  <span class="text-xs text-ink-3 leading-snug block">{agent.role}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <!-- Submit + status -->
+        <div class="pt-3 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <p class="text-xs text-ink-4 max-w-md">
+            Ved å sende inn samtykker du til at vi kontakter deg om demoen.
+            Vi lagrer kun det du fyller ut, og deler det ikke videre.
+          </p>
+          <button type="submit" id="submitBtn" class="btn btn-primary whitespace-nowrap">
+            <span class="btn-label">Send forespørsel</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="formStatus" class="hidden" role="status"></div>
+      </form>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  const form = document.getElementById('orderForm') as HTMLFormElement | null;
+  const status = document.getElementById('formStatus') as HTMLDivElement | null;
+  const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement | null;
+  const btnLabel = submitBtn?.querySelector('.btn-label') as HTMLElement | null;
+
+  if (form && status && submitBtn && btnLabel) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'hidden';
+      status.textContent = '';
+
+      const data = new FormData(form);
+      const agents = data.getAll('agents').filter(v => typeof v === 'string');
+      const payload = {
+        name:    String(data.get('name')    || '').trim(),
+        company: String(data.get('company') || '').trim(),
+        email:   String(data.get('email')   || '').trim(),
+        phone:   String(data.get('phone')   || '').trim(),
+        message: String(data.get('message') || '').trim(),
+        agents,
+        website: String(data.get('website') || '')   // honeypot
+      };
+
+      submitBtn.disabled = true;
+      btnLabel.textContent = 'Sender...';
+
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (res.ok && json.ok) {
+          status.className = 'p-5 rounded-xl bg-ki/10 border border-ki/30 text-ink';
+          status.innerHTML = `<div class="font-semibold mb-1">✓ Takk! Forespørselen er sendt.</div><div class="text-sm text-ink-3">Vi tar kontakt på <strong>${payload.email}</strong> så snart som mulig.</div>`;
+          form.reset();
+          btnLabel.textContent = 'Sendt ✓';
+        } else {
+          status.className = 'p-4 rounded-xl bg-loki/10 border border-loki/30 text-ink text-sm';
+          status.textContent = json.error || 'Noe gikk galt. Prøv igjen senere.';
+          submitBtn.disabled = false;
+          btnLabel.textContent = 'Send forespørsel';
+        }
+      } catch (err) {
+        status.className = 'p-4 rounded-xl bg-loki/10 border border-loki/30 text-ink text-sm';
+        status.textContent = 'Nettverksfeil. Sjekk forbindelsen og prøv igjen.';
+        submitBtn.disabled = false;
+        btnLabel.textContent = 'Send forespørsel';
+      }
+    });
+  }
+</script>

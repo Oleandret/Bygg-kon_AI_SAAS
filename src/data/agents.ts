@@ -19,49 +19,50 @@ export type Agent = {
 export const agents: Agent[] = [
   {
     slug: 'loki', num: '01', name: 'Loki',
-    role: 'Kunnskapsmotor — OneDrive + SharePoint',
-    tagline: 'Hele tenant-en søkbar via vektorindeks.',
-    description: 'Loki synkroniserer hele BYGG-KONs OneDrive og SharePoint tenant-wide til en Pinecone-vektorindeks. Alle filer parses, embeddes og blir søkbare — du kan spørre "hva har vi gjort av tilsvarende prosjekter de siste 5 årene?" og få treff på faktisk innhold, ikke bare filnavn.',
-    status: 'beta', color: '#c8102e', colorClass: 'loki',
-    meta: 'Pinecone · OpenAI · Tenant-wide',
+    role: 'Intern kunnskap — OneDrive & bedriftsdatabase',
+    tagline: 'Filene våre, gjort lesbare for AI.',
+    description: 'Loki henter filer fra OneDrive og bedriftens database, og preparerer dem slik at språkmodeller kan lese og forstå alt innholdet — fra PDF-er og tegninger til regneark og notater. Resultatet er at hele bedriftens kunnskap blir søkbar med naturlig språk.',
+    status: 'live', color: '#c8102e', colorClass: 'loki',
+    meta: 'Vektordatabase · MCP · Tenant-wide',
     pipeline: [
-      { i: '🔍', n: 'Discovery',  d: 'Tenant-wide drive-enumerering' },
-      { i: '🔄', n: 'Delta sync', d: 'Per-drive, hver 10. min' },
-      { i: '📄', n: 'Parser',     d: 'Unstructured · hi_res for PDF' },
-      { i: '🧮', n: 'Embedding',  d: 'OpenAI text-embedding-3-large' },
-      { i: '🗄️', n: 'Pinecone',   d: 'Vektorindeks, søkbar' }
+      { i: '🔍', n: 'Discovery',   d: 'Tenant-wide enumerering av kilder' },
+      { i: '🔄', n: 'Delta sync',  d: 'Inkrementell, hver 10. min' },
+      { i: '📄', n: 'Parser',      d: 'PDF, Word, tegninger, regneark' },
+      { i: '🧮', n: 'Embedding',   d: 'Tekst → vektor-representasjon' },
+      { i: '🗄️', n: 'Vektor-DB',   d: 'Semantisk søkbar indeks' }
     ],
     details: [
-      { k: 'Stack',       v: 'Python · FastAPI · Docker' },
-      { k: 'Vektorstore', v: 'Pinecone · 1536-dim' },
-      { k: 'Embeddings',  v: 'OpenAI text-embedding-3-large' },
-      { k: 'Parser',      v: 'Unstructured (PDF, DOCX, m.fl.)' },
-      { k: 'Kilder',      v: 'OneDrive + SharePoint via Microsoft Graph' },
-      { k: 'Tilgang',     v: 'Admin-UI + MCP-server (loki-mcp)' }
+      { k: 'Arkitektur',  v: 'Container-basert mikrotjeneste' },
+      { k: 'Lagring',     v: 'Vektordatabase · høy-dimensjonal' },
+      { k: 'Embeddings',  v: 'Tekst-embedding-modell (SOTA)' },
+      { k: 'Parser',      v: 'PDF · DOCX · XLSX · tegninger' },
+      { k: 'Kilder',      v: 'OneDrive + SharePoint (tenant-wide)' },
+      { k: 'Synkronisering', v: 'Inkrementell delta-sync · hvert 10. min' },
+      { k: 'Tilgang',     v: 'Admin-UI + MCP-server' }
     ],
     url: 'https://byggkon-loki-ai-production.up.railway.app/'
   },
   {
     slug: 'nova', num: '02', name: 'Nova',
-    role: 'Multi-kanal AI-assistent',
-    tagline: 'Nova svarer i chat, Teams, e-post og webhook.',
-    description: 'Nova er en RAG-basert AI-assistent som svarer på spørsmål fra ansatte via chat, Microsoft Teams, e-post (Gmail) eller webhook. Hun indekserer Google Drive nattlig og parser vedlegg fra e-post — PDF, Word, Excel — og bruker det som kontekst når hun genererer svar.',
+    role: 'Kunnskapsagent for byggebransjen',
+    tagline: 'Faglig kontekst og bransjepraksis, på spørsmål.',
+    description: 'Nova er en kunnskapsagent spesialisert på byggebransjen. Hun gir ansatte tilgang til faglig kontekst, regelverk og bransjepraksis gjennom samme samtalegrensesnitt som de allerede bruker — chat, Teams eller e-post.',
     status: 'live', color: '#f5b400', colorClass: 'nova',
-    meta: 'Pinecone · Multi-kanal RAG',
+    meta: 'Bransjekunnskap · Multi-kanal',
     pipeline: [
-      { i: '📩', n: 'Mottak',      d: 'Chat · Teams · Gmail · webhook' },
+      { i: '📩', n: 'Mottak',      d: 'Chat · Teams · e-post · webhook' },
       { i: '📎', n: 'Vedlegg',     d: 'PDF, Word, Excel, CSV parses' },
-      { i: '🔎', n: 'RAG-søk',     d: 'Pinecone retrieval' },
-      { i: '🧠', n: 'Generering',  d: 'OpenAI med kanal-spesifikk prompt' },
+      { i: '🔎', n: 'Kunnskapssøk', d: 'Semantisk søk i bransjekunnskap' },
+      { i: '🧠', n: 'Generering',  d: 'Svar tilpasset kanal og kontekst' },
       { i: '↩️', n: 'Levering',    d: 'Tilbake til samme kanal' }
     ],
     details: [
-      { k: 'Stack',        v: 'Node.js 20 · Express · SQLite' },
-      { k: 'Vektorstore',  v: 'Pinecone' },
-      { k: 'LLM',          v: 'OpenAI (konfigurerbar modell)' },
-      { k: 'Kanaler',      v: 'Chat · Teams · Gmail · webhook' },
-      { k: 'Sikkerhet',    v: 'AES-256-GCM kryptert credentials' },
-      { k: 'Tilgang',      v: 'Admin-UI + MCP-server (nova-mcp)' }
+      { k: 'Domene',       v: 'Bygg- og anleggsfaget' },
+      { k: 'Kanaler',      v: 'Chat · Teams · e-post · webhook' },
+      { k: 'Lagring',      v: 'Vektordatabase for bransjekunnskap' },
+      { k: 'LLM',          v: 'Konfigurerbar — Claude, GPT, m.fl.' },
+      { k: 'Sikkerhet',    v: 'Kryptert credential-lagring' },
+      { k: 'Tilgang',      v: 'Admin-UI + MCP-server' }
     ],
     url: 'https://nova-ai-agent-bygg-kon-production.up.railway.app/'
   },
