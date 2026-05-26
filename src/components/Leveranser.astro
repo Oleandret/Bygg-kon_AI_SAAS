@@ -57,10 +57,17 @@ const cases: Case[] = [
   }
 ];
 ---
-<section id="leveranser" class="py-24 lg:py-32">
+<section id="leveranser" class="py-28 lg:py-36 relative overflow-hidden">
+
+  <!-- Background orbs for ambient motion -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="orb" style="width:400px; height:400px; background:#0a6cf0; top:100px; left:-150px; opacity:0.10; filter:blur(100px); animation: drift-3 28s ease-in-out infinite;"></div>
+    <div class="orb" style="width:500px; height:500px; background:#f5b400; bottom:-200px; right:-100px; opacity:0.12; filter:blur(120px); animation: drift-1 24s ease-in-out infinite;"></div>
+  </div>
+
   <div class="wrap">
 
-    <div class="max-w-[760px] mb-14 lg:mb-20">
+    <div class="max-w-[760px] mb-16 lg:mb-20 reveal">
       <div class="eyebrow mb-5">
         <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
         Leveranser
@@ -75,7 +82,7 @@ const cases: Case[] = [
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-7">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-7 reveal">
       {cases.map((c, ci) => (
         <article class="card overflow-hidden">
           <!-- Header -->
