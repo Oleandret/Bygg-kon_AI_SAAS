@@ -1,0 +1,62 @@
+---
+import { agents } from '../data/agents';
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-line bg-white">
+  <div class="wrap py-16 lg:py-20">
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-14">
+      <div class="md:col-span-4">
+        <a href="/" class="inline-flex items-center gap-1 mb-5">
+          <img
+            src="https://cdn.prod.website-files.com/6971dca24ade29a12176f9bf/6971e131952541e3a72f462b_Navigation.png"
+            alt="BYGG-KON"
+            class="h-7 brightness-0"
+          />
+          <span class="text-xl font-extrabold text-loki leading-none">.ai</span>
+        </a>
+        <p class="text-[14.5px] text-ink-3 leading-relaxed max-w-sm">
+          Intern AI-plattform for BYGG-KON. Seks agenter koblet til Claude
+          via MCP — for raskere dokumentasjon og bedre kvalitet.
+        </p>
+      </div>
+
+      <div class="md:col-span-2">
+        <h5 class="text-sm font-bold text-ink mb-4">Plattform</h5>
+        <div class="flex flex-col gap-2.5">
+          <a href="/#agenter" class="text-[14px] text-ink-3 hover:text-ink transition-colors">Agenter</a>
+          <a href="/#leveranser" class="text-[14px] text-ink-3 hover:text-ink transition-colors">Leveranser</a>
+          <a href="/#stack" class="text-[14px] text-ink-3 hover:text-ink transition-colors">Stack</a>
+          <a href="https://www.byggkon.no" target="_blank" rel="noopener" class="text-[14px] text-ink-3 hover:text-ink transition-colors">byggkon.no ↗</a>
+        </div>
+      </div>
+
+      <div class="md:col-span-3">
+        <h5 class="text-sm font-bold text-ink mb-4">Agenter</h5>
+        <div class="flex flex-col gap-2.5">
+          {agents.map(a => (
+            <a href={`/agent/${a.slug}`} class="text-[14px] text-ink-3 hover:text-ink transition-colors inline-flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full" style={`background:${a.color}`}></span>
+              {a.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div class="md:col-span-3">
+        <h5 class="text-sm font-bold text-ink mb-4">Kontakt</h5>
+        <div class="space-y-3">
+          <div class="text-[14px] text-ink-3">Travbaneveien 3<br>4031 Stavanger</div>
+          <a href="tel:+4751974400" class="block text-[14px] text-ink-3 hover:text-ink transition-colors">+47 51 97 44 00</a>
+          <a href="mailto:oat@byggkon.no" class="block text-[14px] text-ink-3 hover:text-ink transition-colors">oat@byggkon.no</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-6 border-t border-line flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <span class="text-xs text-ink-4">© {year} BYGG-KON AS</span>
+      <span class="text-xs text-ink-4 font-mono">Astro · Tailwind · Claude · MCP</span>
+    </div>
+
+  </div>
+</footer>

@@ -1,0 +1,218 @@
+---
+// Hero — premium SaaS aesthetic, serif accent, animated architecture
+---
+<section class="pt-40 pb-24 lg:pt-48 lg:pb-32 relative overflow-hidden mesh-bg">
+  <div class="absolute inset-0 noise opacity-40 pointer-events-none"></div>
+
+  <div class="wrap relative">
+
+    <!-- Top eyebrow chip -->
+    <div class="flex justify-center mb-10">
+      <a href="/#agenter" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur border border-line text-[13px] font-medium text-ink-3 hover:border-ink/20 transition-all group">
+        <span class="inline-flex items-center gap-1 text-yellow font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-ki animate-pulse"></span>
+          Live
+        </span>
+        <span>6 AI-agenter · MCP-koblet til Claude Opus 4.7</span>
+        <span class="text-ink-4 group-hover:translate-x-0.5 transition-transform">→</span>
+      </a>
+    </div>
+
+    <!-- Big editorial headline -->
+    <h1 class="text-center mb-8 max-w-[1000px] mx-auto">
+      <span class="block font-extrabold text-ink leading-[0.95] tracking-tightest" style="font-size: clamp(48px, 8.5vw, 112px);">
+        Kunnskap i system.
+      </span>
+      <span class="block h-display mt-2" style="font-size: clamp(48px, 8.5vw, 112px); line-height: 1;">
+        Levert av <span class="text-loki">AI</span>.
+      </span>
+    </h1>
+
+    <!-- Lede -->
+    <p class="lede text-center max-w-[680px] mx-auto mb-12">
+      BYGG-KON.ai samler hele virksomheten i én plattform &mdash; intern kunnskap,
+      eiendomsregister, økonomi og e-post. Seks spesialiserte AI-agenter koblet
+      til Claude via MCP, slik at ansatte produserer kvalitetssikret dokumentasjon
+      på sekunder.
+    </p>
+
+    <!-- CTAs -->
+    <div class="flex flex-wrap gap-3 justify-center mb-20">
+      <a href="#agenter" class="btn btn-primary">
+        Utforsk plattformen
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="#leveranser" class="btn btn-secondary">Se eksempler</a>
+    </div>
+
+    <!-- Architecture visual -->
+    <div class="relative max-w-[900px] mx-auto">
+      <div class="relative aspect-[16/10] bg-white/60 backdrop-blur rounded-3xl border border-line p-8 lg:p-12 shadow-[0_40px_80px_-20px_rgba(10,13,18,0.12)]">
+        <!-- Architecture label -->
+        <div class="absolute top-5 left-6 flex items-center gap-2 z-10">
+          <span class="w-2 h-2 rounded-full bg-ki animate-pulse"></span>
+          <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-4 font-semibold">// Live arkitektur</span>
+        </div>
+
+        <!-- MCP indicator -->
+        <div class="absolute top-5 right-6 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-yellow/20 border border-yellow/40 z-10">
+          <span class="font-mono text-[10px] font-bold tracking-[0.18em] text-[#8a6300]">MCP</span>
+        </div>
+
+        <svg viewBox="0 0 800 460" class="w-full h-full hero-arch" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#f5b400" stop-opacity="0.32"/>
+              <stop offset="60%" stop-color="#f5b400" stop-opacity="0.06"/>
+              <stop offset="100%" stop-color="#f5b400" stop-opacity="0"/>
+            </radialGradient>
+            <!-- Animation paths -->
+            <path id="hp-1" d="M 130 130 L 400 230" fill="none"/>
+            <path id="hp-2" d="M 400 90  L 400 230" fill="none"/>
+            <path id="hp-3" d="M 670 130 L 400 230" fill="none"/>
+            <path id="hp-4" d="M 130 330 L 400 230" fill="none"/>
+            <path id="hp-5" d="M 400 370 L 400 230" fill="none"/>
+            <path id="hp-6" d="M 670 330 L 400 230" fill="none"/>
+          </defs>
+
+          <!-- Rings -->
+          <g class="rings">
+            <circle cx="400" cy="230" r="180" fill="none" stroke="#0a0d12" stroke-opacity="0.04" stroke-dasharray="2 8"/>
+            <circle cx="400" cy="230" r="130" fill="none" stroke="#0a0d12" stroke-opacity="0.03" stroke-dasharray="2 8"/>
+          </g>
+
+          <!-- Static connection lines -->
+          <g stroke-width="1" fill="none" stroke-opacity="0.12">
+            <line x1="400" y1="230" x2="130" y2="130" stroke="#c8102e"/>
+            <line x1="400" y1="230" x2="400" y2="90"  stroke="#f5b400"/>
+            <line x1="400" y1="230" x2="670" y2="130" stroke="#0a6cf0"/>
+            <line x1="400" y1="230" x2="130" y2="330" stroke="#ff6b35"/>
+            <line x1="400" y1="230" x2="400" y2="370" stroke="#1f8a3a"/>
+            <line x1="400" y1="230" x2="670" y2="330" stroke="#7a3fc8"/>
+          </g>
+
+          <!-- Animated dashed flow lines -->
+          <g stroke-width="1.5" fill="none" stroke-dasharray="3 9" stroke-linecap="round" stroke-opacity="0.55">
+            <line x1="130" y1="130" x2="400" y2="230" stroke="#c8102e" class="flow-line"/>
+            <line x1="400" y1="90"  x2="400" y2="230" stroke="#f5b400" class="flow-line" style="animation-delay:-.25s"/>
+            <line x1="670" y1="130" x2="400" y2="230" stroke="#0a6cf0" class="flow-line" style="animation-delay:-.50s"/>
+            <line x1="130" y1="330" x2="400" y2="230" stroke="#ff6b35" class="flow-line" style="animation-delay:-.75s"/>
+            <line x1="400" y1="370" x2="400" y2="230" stroke="#1f8a3a" class="flow-line" style="animation-delay:-1.0s"/>
+            <line x1="670" y1="330" x2="400" y2="230" stroke="#7a3fc8" class="flow-line" style="animation-delay:-1.25s"/>
+          </g>
+
+          <!-- Traveling particles -->
+          <g>
+            <circle r="4" fill="#c8102e">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#hp-1"/></animateMotion>
+              <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="4" fill="#f5b400">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="-0.45s"><mpath href="#hp-2"/></animateMotion>
+              <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" begin="-0.45s"/>
+            </circle>
+            <circle r="4" fill="#0a6cf0">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="-0.85s"><mpath href="#hp-3"/></animateMotion>
+              <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" begin="-0.85s"/>
+            </circle>
+            <circle r="4" fill="#ff6b35">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="-1.25s"><mpath href="#hp-4"/></animateMotion>
+              <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" begin="-1.25s"/>
+            </circle>
+            <circle r="4" fill="#1f8a3a">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="-1.65s"><mpath href="#hp-5"/></animateMotion>
+              <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" begin="-1.65s"/>
+            </circle>
+            <circle r="4" fill="#7a3fc8">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="-2.05s"><mpath href="#hp-6"/></animateMotion>
+              <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" begin="-2.05s"/>
+            </circle>
+          </g>
+
+          <!-- Hub glow -->
+          <circle cx="400" cy="230" r="120" fill="url(#hubGlow)" class="hub-glow"/>
+
+          <!-- Hub -->
+          <circle cx="400" cy="230" r="58" fill="#ffffff" stroke="#0a0d12" stroke-width="1.5" class="hub-core"/>
+          <text x="400" y="225" text-anchor="middle" font-family="Inter" font-size="16" font-weight="800" fill="#0a0d12">Claude</text>
+          <text x="400" y="244" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">Opus 4.7</text>
+
+          <!-- Agent nodes — labeled pills -->
+          <g class="agent-node">
+            <rect x="60"  y="105" width="140" height="50" rx="12" fill="#ffffff" stroke="#c8102e" stroke-width="1.5"/>
+            <text x="130" y="128" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#0a0d12">Loki</text>
+            <text x="130" y="142" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">Intern kunnskap</text>
+          </g>
+          <g class="agent-node">
+            <rect x="330" y="65"  width="140" height="50" rx="12" fill="#ffffff" stroke="#f5b400" stroke-width="1.5"/>
+            <text x="400" y="88"  text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#0a0d12">Nova</text>
+            <text x="400" y="102" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">Multi-kanal</text>
+          </g>
+          <g class="agent-node">
+            <rect x="600" y="105" width="140" height="50" rx="12" fill="#ffffff" stroke="#0a6cf0" stroke-width="1.5"/>
+            <text x="670" y="128" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#0a0d12">Hilde</text>
+            <text x="670" y="142" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">Eiendom</text>
+          </g>
+          <g class="agent-node">
+            <rect x="60"  y="305" width="140" height="50" rx="12" fill="#ffffff" stroke="#ff6b35" stroke-width="1.5"/>
+            <text x="130" y="328" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#0a0d12">Epostagent</text>
+            <text x="130" y="342" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">E-post</text>
+          </g>
+          <g class="agent-node">
+            <rect x="330" y="345" width="140" height="50" rx="12" fill="#ffffff" stroke="#1f8a3a" stroke-width="1.5"/>
+            <text x="400" y="368" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#0a0d12">KI Tilbud</text>
+            <text x="400" y="382" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">Anbud</text>
+          </g>
+          <g class="agent-node">
+            <rect x="600" y="305" width="140" height="50" rx="12" fill="#ffffff" stroke="#7a3fc8" stroke-width="1.5"/>
+            <text x="670" y="328" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#0a0d12">Tripletex</text>
+            <text x="670" y="342" text-anchor="middle" font-family="Inter" font-size="10" font-weight="500" fill="#6b7280">Økonomi</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Inline stats below visual -->
+    <div class="grid grid-cols-3 gap-6 lg:gap-12 max-w-[680px] mx-auto mt-16">
+      <div class="text-center">
+        <div class="text-4xl lg:text-5xl font-extrabold text-ink leading-none tracking-tighter">6</div>
+        <div class="text-[13px] text-ink-4 mt-2.5">AI-agenter</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl lg:text-5xl font-extrabold text-ink leading-none tracking-tighter">40<span class="text-loki">+</span></div>
+        <div class="text-[13px] text-ink-4 mt-2.5">År erfaring</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl lg:text-5xl font-extrabold text-ink leading-none tracking-tighter">4 000<span class="text-loki">+</span></div>
+        <div class="text-[13px] text-ink-4 mt-2.5">Prosjekter</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-arch .flow-line { animation: flow-dash 1.6s linear infinite; }
+  @keyframes flow-dash { to { stroke-dashoffset: -24; } }
+
+  .hero-arch .rings {
+    transform-origin: 400px 230px;
+    animation: ring-rot 120s linear infinite;
+  }
+  @keyframes ring-rot { to { transform: rotate(360deg); } }
+
+  .hero-arch .hub-glow {
+    transform-origin: 400px 230px;
+    animation: hub-pulse 4s ease-in-out infinite;
+  }
+  @keyframes hub-pulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.08); }
+  }
+  .hero-arch .hub-core { filter: drop-shadow(0 4px 14px rgba(245, 180, 0, 0.22)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-arch * { animation: none !important; }
+  }
+</style>

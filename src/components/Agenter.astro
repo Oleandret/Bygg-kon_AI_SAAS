@@ -1,0 +1,80 @@
+---
+import { agents } from '../data/agents';
+
+const icons: Record<string, string> = {
+  loki:        `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+  nova:        `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>`,
+  hilde:       `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  tripletex:   `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+  epost:       `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  'ki-tilbud': `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>`
+};
+---
+<section id="agenter" class="py-24 lg:py-32 bg-cream">
+  <div class="wrap">
+
+    <div class="max-w-[760px] mb-14 lg:mb-20">
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+        Agentene
+      </div>
+      <h2 class="h2 mb-6">
+        Seks spesialister for byggfaget,
+        <span class="h-display block">orkestrert av Claude.</span>
+      </h2>
+      <p class="lede max-w-[600px]">
+        Hver agent har sitt eget oppdrag. Sammen leverer de alt fra
+        dispensasjons-søknader til befaringsrapporter på sekunder.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+      {agents.map(agent => {
+        const statusLabel = agent.status === 'beta' ? 'Beta' : 'Live';
+        const statusColor = agent.status === 'beta' ? '#b88600' : '#1f8a3a';
+        return (
+          <a
+            href={`/agent/${agent.slug}`}
+            class="group relative block card p-8 lg:p-9 overflow-hidden"
+            style={`--c:${agent.color};`}
+          >
+            <!-- Hover glow -->
+            <div
+              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              style={`background: radial-gradient(ellipse 90% 60% at 50% 0%, ${agent.color}10, transparent 70%);`}
+            ></div>
+
+            <div class="relative">
+              <div class="flex items-start justify-between mb-8">
+                <div
+                  class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                  style={`background:${agent.color}1a; color:${agent.color}; box-shadow: 0 0 0 1px ${agent.color}33 inset;`}
+                >
+                  <Fragment set:html={icons[agent.slug] ?? ''} />
+                </div>
+                <span class={`inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full`}
+                      style={`background:${statusColor}15; color:${statusColor};`}>
+                  <span class="w-1.5 h-1.5 rounded-full" style={`background:${statusColor}`}></span>
+                  {statusLabel}
+                </span>
+              </div>
+
+              <div class="text-xs font-mono uppercase tracking-wider text-ink-4 mb-2">{agent.num}</div>
+              <h3 class="text-2xl font-extrabold text-ink leading-tight mb-3 tracking-tight">{agent.name}</h3>
+              <p class="text-[15px] text-ink-3 leading-[1.65] mb-7 min-h-[80px]">
+                {agent.tagline}
+              </p>
+
+              <div class="pt-5 border-t border-line flex items-center justify-between">
+                <span class="text-xs font-mono text-ink-4">{agent.meta}</span>
+                <span class="text-sm font-semibold inline-flex items-center gap-1 transition-transform group-hover:translate-x-1" style={`color:${agent.color}`}>
+                  Les mer →
+                </span>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>

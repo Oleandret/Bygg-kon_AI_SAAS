@@ -1,0 +1,72 @@
+---
+import { agents } from '../data/agents';
+const liveAgents = agents.filter(a => a.url);
+---
+<header class="fixed top-0 left-0 right-0 z-50 transition-all" id="nav">
+
+  <!-- Top quick-access strip -->
+  <div class="bg-cream/80 backdrop-blur-md border-b border-line/40">
+    <div class="wrap flex items-center justify-between py-2 gap-3 overflow-x-auto">
+      <span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-4 whitespace-nowrap">
+        Live demoer
+      </span>
+      <div class="flex items-center gap-1.5">
+        {liveAgents.map(agent => (
+          <a
+            href={agent.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-line text-[12px] font-medium text-ink hover:border-ink/30 hover:shadow-sm transition-all whitespace-nowrap"
+          >
+            <span class="w-1.5 h-1.5 rounded-full" style={`background:${agent.color}`}></span>
+            {agent.name}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-ink-4">
+              <path d="M7 17l10-10M9 7h8v8"/>
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Main nav -->
+  <div class="bg-white/90 backdrop-blur-md border-b border-transparent transition-all" id="nav-main">
+    <div class="wrap flex items-center justify-between py-4 gap-6">
+      <a href="/" class="flex items-center gap-1 group">
+        <img
+          src="https://cdn.prod.website-files.com/6971dca24ade29a12176f9bf/6971e131952541e3a72f462b_Navigation.png"
+          alt="BYGG-KON"
+          class="h-7 brightness-0"
+        />
+        <span class="text-xl font-extrabold text-loki leading-none ml-0.5">.ai</span>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-8 text-[14.5px] text-ink-3 font-medium">
+        <a href="/#plattform" class="hover:text-ink transition-colors">Plattform</a>
+        <a href="/#agenter" class="hover:text-ink transition-colors">Agenter</a>
+        <a href="/#leveranser" class="hover:text-ink transition-colors">Leveranser</a>
+        <a href="/#prosess" class="hover:text-ink transition-colors">Prosess</a>
+        <a href="/#stack" class="hover:text-ink transition-colors">Stack</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a href="https://www.byggkon.no" target="_blank" rel="noopener" class="hidden sm:inline-block text-sm text-ink-3 hover:text-ink transition-colors">
+          byggkon.no ↗
+        </a>
+        <a href="/#kontakt" class="btn btn-primary text-sm py-2.5 px-5">Kom i gang</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const navMain = document.getElementById('nav-main');
+  if (navMain) {
+    const onScroll = () => {
+      if (window.scrollY > 12) navMain.classList.add('border-line', 'shadow-[0_1px_0_rgba(10,13,18,0.04)]');
+      else navMain.classList.remove('border-line', 'shadow-[0_1px_0_rgba(10,13,18,0.04)]');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+</script>

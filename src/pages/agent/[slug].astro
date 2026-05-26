@@ -1,0 +1,124 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { agents, getAgent } from '../../data/agents';
+
+const { slug } = Astro.params;
+const agent = slug ? getAgent(slug) : undefined;
+if (!agent) return Astro.redirect('/');
+
+const isBeta = agent.status === 'beta';
+const statusLabel = isBeta ? 'Beta — under testing' : 'Live i produksjon';
+const statusColor = isBeta ? '#b88600' : '#1f8a3a';
+const others = agents.filter(a => a.slug !== agent.slug).slice(0, 3);
+---
+<Layout title={`${agent.name} — BYGG-KON.ai`} description={agent.tagline}>
+
+  <section class="pt-40 pb-16 lg:pt-48 lg:pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 -z-10"
+         style={`background: radial-gradient(ellipse 70% 50% at 50% 0%, ${agent.color}12, transparent 60%);`}></div>
+
+    <div class="wrap max-w-[920px]">
+      <a href="/" class="inline-flex items-center gap-1.5 text-sm text-ink-4 hover:text-ink mb-8 transition-colors">
+        ← Tilbake
+      </a>
+
+      <div class="flex flex-wrap items-center gap-3 mb-7">
+        <span class="text-sm font-mono uppercase tracking-wider" style={`color:${agent.color}`}>
+          {agent.num} · {agent.role}
+        </span>
+        <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full"
+              style={`background:${statusColor}15; color:${statusColor};`}>
+          <span class="w-1.5 h-1.5 rounded-full" style={`background:${statusColor}`}></span>
+          {statusLabel}
+        </span>
+      </div>
+
+      <h1 class="h1 mb-6">{agent.name}</h1>
+      <p class="lede mb-6 max-w-[680px] text-xl">
+        {agent.tagline}
+      </p>
+      <p class="text-base text-ink-3 max-w-[680px] leading-[1.65]">
+        {agent.description}
+      </p>
+
+      {agent.url && (
+        <div class="mt-10">
+          <a href={agent.url} target="_blank" rel="noopener" class="btn btn-primary">
+            Åpne {agent.name} ↗
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="py-20 bg-cream">
+    <div class="wrap max-w-[1100px]">
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+        Pipeline
+      </div>
+      <h2 class="h2 mb-10">Slik flyter dataen</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        {agent.pipeline.map((step, i) => (
+          <div class="card p-6 text-center relative">
+            <div class="text-[10px] font-mono font-bold tracking-wider uppercase mb-3" style={`color:${agent.color}`}>0{i + 1}</div>
+            <div class="text-3xl mb-3">{step.i}</div>
+            <div class="text-sm font-bold text-ink mb-1.5">{step.n}</div>
+            <div class="text-xs text-ink-4 leading-relaxed">{step.d}</div>
+            {i < agent.pipeline.length - 1 && (
+              <div class="hidden md:block absolute top-1/2 -right-2 -translate-y-1/2 text-ink-5 z-10">
+                <svg width="14" height="10" viewBox="0 0 16 10" fill="none">
+                  <path d="M0 5 L12 5 M8 1 L14 5 L8 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="wrap max-w-[920px]">
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+        Tekniske detaljer
+      </div>
+      <h2 class="h2 mb-10">Under panseret</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {agent.details.map(d => (
+          <div class="card p-6">
+            <div class="text-xs text-ink-4 uppercase tracking-wider font-semibold mb-2">{d.k}</div>
+            <div class="text-base font-semibold text-ink">{d.v}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-cream">
+    <div class="wrap">
+      <div class="eyebrow mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-loki"></span>
+        Andre agenter
+      </div>
+      <h2 class="h2 mb-10">Utforsk videre</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {others.map(o => (
+          <a href={`/agent/${o.slug}`} class="group card p-6">
+            <div class="w-10 h-10 rounded-xl mb-5 flex items-center justify-center" style={`background:${o.color}1a; color:${o.color};`}>
+              <span class="text-xs font-bold">{o.num}</span>
+            </div>
+            <h3 class="text-lg font-extrabold mb-1 tracking-tight">{o.name}</h3>
+            <p class="text-sm text-ink-3 mb-4">{o.role}</p>
+            <span class="text-sm font-semibold inline-flex items-center gap-1.5 transition-transform group-hover:translate-x-1" style={`color:${o.color}`}>
+              Les mer →
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
