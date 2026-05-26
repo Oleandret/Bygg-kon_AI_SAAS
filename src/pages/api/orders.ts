@@ -78,9 +78,9 @@ export const POST: APIRoute = async ({ request }) => {
  * Admin — list all orders. Requires Authorization: Bearer <ADMIN_API_KEY>.
  */
 export const GET: APIRoute = async ({ request, url }) => {
-  const adminKey = process.env.ADMIN_API_KEY;
+  const adminKey = (process.env.ADMIN_API_KEY || '').trim();
   if (!adminKey) {
-    return new Response(JSON.stringify({ ok: false, error: 'ADMIN_API_KEY ikke satt' }), {
+    return new Response(JSON.stringify({ ok: false, error: 'ADMIN_API_KEY ikke satt på serveren' }), {
       status: 503, headers: { 'Content-Type': 'application/json' }
     });
   }

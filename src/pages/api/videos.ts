@@ -9,21 +9,43 @@ import { agents as ALL_AGENTS } from '../../data/agents';
 const VALID_SLUGS = new Set(ALL_AGENTS.map(a => a.slug));
 
 function requireAdmin(request: Request): { ok: true } | { ok: false; response: Response } {
-  const adminKey = process.env.ADMIN_API_KEY;
+  // Trim — Railway lagrer av og til env-vars med trailing newline/space
+  const adminKey = (process.env.ADMIN_API_KEY || '').trim();
   if (!adminKey) {
     return {
       ok: false,
-      response: new Response(JSON.stringify({ ok: false, error: 'ADMIN_API_KEY ikke satt' }), {
+      response: new Response(JSON.stringify({
+        ok: false,
+        error: 'ADMIN_API_KEY ikke satt på serveren. Sjekk Railway Variables og redeploy.'
+      }), {
         status: 503, headers: { 'Content-Type': 'application/json' }
       })
     };
   }
   const auth = request.headers.get('authorization') || '';
   const token = auth.replace(/^Bearer\s+/i, '').trim();
+  if (!token) {
+    return {
+      ok: false,
+      response: new Response(JSON.stringify({ ok: false, error: 'Mangler Authorization-header' }), {
+        status: 401, headers: { 'Content-Type': 'application/json' }
+      })
+    };
+  }
   if (token !== adminKey) {
     return {
       ok: false,
-      response: new Response(JSON.stringify({ ok: false, error: 'Unauthorized' }), {
+      response: new Response(JSON.stringify({
+        ok: false,
+        error: 'Feil nøkkel',
+        // Diagnose-hjelp uten å lekke selve nøkkelen:
+        diagnose: {
+          serverKeyLength: adminKey.length,
+          clientKeyLength: token.length,
+          serverFirstChar: adminKey[0],
+          clientFirstChar: token[0]
+        }
+      }), {
         status: 401, headers: { 'Content-Type': 'application/json' }
       })
     };

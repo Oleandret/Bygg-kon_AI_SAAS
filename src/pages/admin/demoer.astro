@@ -205,13 +205,33 @@ import { agents } from '../../data/agents';
 
   keySubmit.addEventListener('click', async () => {
     apiKey = keyInput.value.trim();
-    if (!apiKey) return;
-    if (await verifyKey()) {
-      sessionStorage.setItem('admin_api_key', apiKey);
-      hideKeyOverlay();
-      loadVideos();
-    } else {
-      keyError.textContent = 'Feil nøkkel.';
+    if (!apiKey) {
+      keyError.textContent = 'Lim inn nøkkelen først.';
+      keyError.classList.remove('hidden');
+      return;
+    }
+    // First call diagnose endpoint for better error messages
+    try {
+      const check = await fetch('/api/admin-check', {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      const data = await check.json();
+      if (!data.server_key_configured) {
+        keyError.innerHTML = '<strong>Server-nøkkel mangler.</strong><br>ADMIN_API_KEY er ikke satt på Railway. Gå til Variables → legg til → klikk Deploy.';
+        keyError.classList.remove('hidden');
+        return;
+      }
+      if (data.matches) {
+        sessionStorage.setItem('admin_api_key', apiKey);
+        hideKeyOverlay();
+        loadVideos();
+        return;
+      }
+      // Mismatch — give specific hint
+      keyError.innerHTML = `<strong>Nøkkelen matcher ikke.</strong><br><span class="text-xs">Server: ${data.server_key_length} tegn (start: '${data.server_key_first_char}'). Klient: ${data.token_length} tegn (start: '${apiKey[0]}').<br>${data.server_key_had_whitespace ? '⚠️ Server-nøkkelen hadde ekstra mellomrom — Railway trimmer det nå automatisk.' : ''}<br>Sjekk at du har kopiert hele nøkkelen uten anførselstegn eller mellomrom.</span>`;
+      keyError.classList.remove('hidden');
+    } catch (err) {
+      keyError.textContent = 'Nettverksfeil. Prøv igjen.';
       keyError.classList.remove('hidden');
     }
   });
